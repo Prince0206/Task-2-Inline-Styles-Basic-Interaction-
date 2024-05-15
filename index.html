@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 2</title>
+</head>
+<style>
+    
+.main h1{
+    font-size: 36px;
+    text-align: center;
+    font-family: Arial, Helvetica;
+}
+
+input{
+    font-family: Arial, Helvetica, sans-serif;
+    width:100% ;
+    font-size: 20px;
+    padding: 12px 20px;
+    margin: 8px;
+    border: none;
+    border-bottom: 2px solid #764776;
+}
+
+input[type=submit]{
+    font-family:Arial, Helvetica, sans-serif;
+    width: 100%;
+    background-color: #764776;
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    margin: 4px 2px;
+    border-radius: 10px;
+}
+
+.main{
+    padding: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 5px 5px 7px 5px #888;
+}
+
+button {
+    background-color: #e9aa46;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+
+</style>
+<body>
+    <h1>Inline Styles, Basic Interaction,
+        and Server-Side Validation</h1>
+        <h1 style="color: rgb(176, 109, 16); text-align: center;">Sign Up</h1>
+        <form action="/submit" method="post" onsubmit="return validateForm()">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+        <br>
+        <input type="text" class="box" id="fullname" name="fullname" placeholder="fullname" required/>
+        <br>
+        <br>
+        <input type="text" class="box" id="age" name="age" placeholder="age" required/>
+        <br>
+        <br>
+        <input type="email" class="box" id="email" name="email" placeholder="email" required/>
+        <br>
+        <br>
+        <input type="number" class="box" id="phno" name="phno" placeholder="Contacts" required/>
+        <br>
+       
+        <label for="password">Password:</label>
+        <input type="password" class="box" id="password" name="password"  required/>
+        <br>
+        
+        <button onclick="validateForm()" type="submit">Submit</button>
+      </form>
+
+      <script>
+       const express = require('express');
+       const bodyParser = require('body-parser');
+
+       const app = express();
+       const PORT = process.env.PORT || 3000;
+
+       app.use(bodyParser.urlencoded({ extended: true }));
+
+      // Routes
+      app.get('/', (req, res) => {
+      res.sendFile(__dirname + '/index.html');
+     });
+
+     app.post('/submit', (req, res) => {
+      const { username, fullname, age, email, phno, password } = req.body;
+
+    // Validate form data
+    if (username.trim() === '' || password.trim() === '') {
+        res.status(400).send('Please enter a username and password.');
+        return;
+    }
+
+    // Other validation checks...
+    if (!isValidEmail(email)) {
+        res.status(400).send('Please enter a valid email address.');
+        return;
+    }
+
+    // Process data and send success response
+    const validatedData = { username, fullname, age, email, phno, password };
+    res.send('Form submitted successfully!');
+});
+
+function isValidEmail(email) {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailRegex.test(email);
+}
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+
+      </script>
+      
+</body>
+</html>
